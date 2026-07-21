@@ -1,10 +1,13 @@
 
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 export default function Count() {
     // const[initialStateValue,setUpFuntion]=useState(initialValue)
     const[count,setCount]=useState(0);
+    useEffect(()=>{
+        console.log("I am fetching data")
+    },[count])
     console.log(count)
   return (
     <>

@@ -13,6 +13,9 @@ const companySchema=new mongoose.Schema({
     type:String,
     required:true
    },
+   role:{
+     type:String
+   },
    description:{
     type:String,
     required:true

@@ -5,10 +5,10 @@ import Form from "./Form"
 function App() {
 
   return (
-    // <Count/>
+    <Count/>
     // <Count></Count>
 
-    <Form/>
+    // <Form/>
   )
 }
 
