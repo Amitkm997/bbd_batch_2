@@ -2,6 +2,7 @@ import Student from "../models/student.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 
 export const register = async (req, res) => {
     try {
@@ -29,6 +30,19 @@ export const register = async (req, res) => {
             return res.status(400).json({
                 message: "Password must be provided"
             });
+        }
+
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message:`
+                  Requirements \n
+                  At least one lowercase letter \n
+                  At least one uppercase letter \n
+                  At least one digit \n
+                  Minimum 8 characters
+                `
+            })
         }
 
         const existingStudent = await Student.findOne({ email });
@@ -179,7 +193,7 @@ export const updateUser = async (req, res) => {
     try {
         const { id } = req.params
 
-        const student = await Student.findByIdAndUpdate(id, 
+        const student = await Student.findByIdAndUpdate(id,
             req.body, { new: true });
 
         if (!student) {
@@ -195,7 +209,7 @@ export const updateUser = async (req, res) => {
             message: "Student updated successfully",
             student: student
         })
-    
+
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -204,26 +218,26 @@ export const updateUser = async (req, res) => {
     }
 }
 
-export const deleteUser=async(req,res)=>{
-    try{
-        const{id}=req.params;
+export const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
 
-        const student=await Student.findByIdAndDelete(id);
-        if(!student){
+        const student = await Student.findByIdAndDelete(id);
+        if (!student) {
             return res.status(400).json({
-            success:false,
-            message:"No student found"
-        })
+                success: false,
+                message: "No student found"
+            })
         }
 
         return res.status(200).json({
-            success:true,
-            message:"Student Deleted successfully"
+            success: true,
+            message: "Student Deleted successfully"
         })
-    }catch(error){
+    } catch (error) {
         return res.status(500).json({
-            success:true,
-            message:error.message
+            success: true,
+            message: error.message
         })
     }
 }
