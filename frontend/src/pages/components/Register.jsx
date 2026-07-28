@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import API from '../../service/api';
 export default function Register() {
     const navigate=useNavigate();
     const[formData,setFormData]=useState({
@@ -10,8 +11,11 @@ export default function Register() {
         skills:"",
         role:"student"
     })
-    console.log(formData);
-
+    // console.log(formData);
+    
+    const[success,setSuccess]=useState("");
+    const[serverError,setServerError]=useState("");
+    console.log(success)
     const handleChange=(e)=>{
        setFormData({
         ...formData,
@@ -42,15 +46,20 @@ export default function Register() {
         return true;
     }
 
-    const handleSubmit=function(e){
+    const handleSubmit=async function(e){
         e.preventDefault(); // prevents reloading
-        if(!validateForm()){
-          return;
-        }else{
-          alert("Form submitted successfully")  
-        }
+        // if(!validateForm()){
+        //   return;
+        // }
 
-        navigate('/login')
+        try{
+          const response=await API.post('/student/register',formData)
+        setSuccess(response.data.message)
+        }catch(error){
+          setServerError(error.response?.data?.message)
+        }
+        // console.log(response)
+        // navigate('/login')
         
     }
 
@@ -66,6 +75,18 @@ export default function Register() {
           <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">
             Student Registration
           </h1>
+          {success && (
+            
+              <div className='bg-green-100 text-green-700 border border-green-900 p-2'>
+                <p>{success}</p>
+              </div>
+          )}
+          {serverError && (
+            
+              <div className='bg-green-100 text-green-700 border border-green-900 p-2'>
+                <p>{serverError}</p>
+              </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-5">
 
             {/* Name */}
